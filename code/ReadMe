@@ -1,0 +1,68 @@
+Project 2, CS-433 Machine Learning, Autumn semester 2019, EPFL
+----------------------------------------------------------------------
+
+
+Requirements:
+-----------------
+During the development process we have used Python 3.7, numpy 1.17.4,
+scipy 1.3.3, imageio 2.6.1, sklearn and Tensorflow version 2.0. We strongly 
+recommend using these or never versions. 
+
+
+Usage:
+-----------------
+This project has four main usages:
+
+1. Preprocessing of the data
+If you would like to preprocess files in format ".tif" containing multiple
+frames, run script "preprocessing.py" by command
+"python3 preprocessing.py". The paths to folders containing
+the data can be set in file "settings.py" by changing the variables
+"RAW_DATA_PATH" and "RAW_MASK_PATH". The paths to folders into which
+will be data stored can be adjusted by changing variables
+"PREPROCESSED_DATA_PATH", "PREPROCESSED_MASK_PATH".
+
+2. Training the U-net model
+You can train the U-net model by running the script "run.py" by
+command "python3 run.py". This will create U-net shaped model,
+train it in the Train data, save in into ".h5" file and test it.
+There are two available architectures of model - "big" and "small".
+You can select the architecture by settings the variable
+"SELECTED_U_NET_SETTINGS" to "BIG_U_NET_SETTINGS" or "SMALL_U_NET_SETTINGS".
+You can select the filter for preprocessing by setting the
+variable "FILTER". The options are "highpass_filter", "sobel" or "None".
+The ratio of splitting the data into test/train sets can be adjusted by
+changing the value of the variable "TEST_SET_SIZE" (percentage of the data
+that will be in the train data set). All of these variables can be found
+in the file "settings.py".
+
+3. Creating the API for Laboratory of the Physics of Biological Systems
+This file serves as an interface for pipeline of the LPBS.
+It contains three functions:
+"predict" - takes a path to the tested image and returns an array of 
+            probabilities of each given pixel. 
+"threshold" - takes out out of the "predict" function and changes probabilities
+              to label using given threshold.        
+"segment" -  Performs watershed segmentation on the given input.
+
+To successfully  run this interface, you need to adjust following variables in 
+file "settings.py":
+    "PATH_TO_MODEL": Path to ".h5" containing weights of trained model which 
+                     will be used for prediction.
+    "SELECTED_U_NET_SETTINGS": Change this variable to corresponding architecture
+                               of used model ({SMALL | MEDIUM | BIG}_U_NET_SETTINGS).
+                               For detailed description of the architectures, 
+                               see attached report.
+    "FILTER": Filter to be used to preprocess the input image.
+
+4. Creating border masks
+Transforms mask labeling the cells into masks labeling the borders between
+the cells. The original masks will be loaded from file "PREPROCESSED_MASK_PATH"
+and saved to "BORDER_MASK_PATH".
+
+
+Code formating:
+-----------------
+The comments in out project are following numpydoc docstring
+convention (see https://numpydoc.readthedocs.io/en/latest/format.html).
+Our code is formatted with Black (see https://github.com/psf/black).
